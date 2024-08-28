@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './UploadPage.css'; // Import CSS file
 
 const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
     const [pdf, setPdf] = useState(null);
@@ -43,7 +44,7 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
             });
 
             if (response.status === 200) {
-                onUploadSuccess(); // Notify App.js of successful upload
+                onUploadSuccess();
             } else {
                 setError('Upload failed. Please try again.');
             }
@@ -55,35 +56,51 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
     };
 
     const handleSelectPdf = (filename) => {
-        onSelectPdf(filename); // Pass selected file to App.js
+        onSelectPdf(filename);
     };
 
     return (
-        <div>
-            <h2>Upload PDF</h2>
-            <form onSubmit={handleUpload}>
-                <input
-                    type="file"
-                    accept=".pdf"
-                    onChange={handleFileChange}
-                    required
-                />
-                <button type="submit" disabled={loading}>Upload</button>
-            </form>
-            <h3>Previously Uploaded PDFs</h3>
-            {pdfs.length > 0 ? (
-                <ul>
-                    {pdfs.map(pdf => (
-                        <li key={pdf.id}>
-                            {pdf.filename}
-                            <button onClick={() => handleSelectPdf(pdf.filename)}>Use for Query</button>
-                        </li>
-                    ))}
-                </ul>
-            ) : (
-                <p>No PDFs uploaded yet.</p>
-            )}
-            {error && <div style={{ color: 'red' }}>{error}</div>}
+        <div className="page-container">
+            <div className="upload-content">
+                <h1 className="title">Ask A PDF</h1>
+                <form onSubmit={handleUpload} className="upload-form">
+                    <input
+                        type="file"
+                        accept=".pdf"
+                        onChange={handleFileChange}
+                        required
+                        className="file-input"
+                    />
+                    <button type="submit" disabled={loading} className="upload-button">
+                        {loading ? 'Uploading...' : 'Upload'}
+                    </button>
+                </form>
+
+                {loading && (
+                    <div className="loading-indicator">
+                        <div className="spinner"></div>
+                        <p>Processing your PDF, please wait...</p>
+                    </div>
+                )}
+
+                <h3 className="subtitle">Previously Uploaded PDFs</h3>
+                {pdfs.length > 0 ? (
+                    <ul className="pdf-list">
+                        {pdfs.map(pdf => (
+                            <li key={pdf.id} className="pdf-item">
+                                {pdf.filename}
+                                <button onClick={() => handleSelectPdf(pdf.filename)} className="select-button">
+                                    Use for Query
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <p>No PDFs uploaded yet.</p>
+                )}
+
+                {error && <div className="error-message">{error}</div>}
+            </div>
         </div>
     );
 };

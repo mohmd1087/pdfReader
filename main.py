@@ -100,11 +100,50 @@ def login():
 def get_active_sessions():
     current_user = get_jwt_identity()
     user = User.query.filter_by(email=current_user).first()
+    
+    if not user or not user.is_admin:
+        return jsonify({'message': 'Admin access required'}), 403
+
+    active_sessions = Session.query.filter_by(active=True).all()
+    active_users = [User.query.get(s.user_id) for s in active_sessions]
+
+    session_data = [
+        {
+            'user_id': u.id,
+            'login_time': s.login_time,
+            'username': u.email
+        }
+        for u, s in zip(active_users, active_sessions)
+    ]
+    # print(f"Active Users: {session_data}")  # Debugging line
+    return jsonify(session_data), 200
+
+
+
+
+# Get the total number of accounts
+@app.route('/admin/total_accounts', methods=['GET'])
+@jwt_required()
+def get_total_accounts():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+    if not user or not user.is_admin:
+        return jsonify({'message': 'Admin access required'}), 403
+    
+    total_accounts = User.query.count()
+    return jsonify({'total_accounts': total_accounts}), 200
+
+# Get only the active (logged-in) users
+@app.route('/admin/active_users', methods=['GET'])
+@jwt_required()
+def get_active_users():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
     if not user or not user.is_admin:
         return jsonify({'message': 'Admin access required'}), 403
     
     active_sessions = Session.query.filter_by(active=True).all()
-    session_data = [
+    active_users = [
         {
             'user_id': s.user_id,
             'login_time': s.login_time,
@@ -112,18 +151,20 @@ def get_active_sessions():
         }
         for s in active_sessions
     ]
-    print(f"Active Sessions: {session_data}")  # Debugging line
-    return jsonify(session_data), 200
+    return jsonify({'active_users': active_users}), 200
 
 
-# Endpoint to log out
 @app.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
     current_user = get_jwt_identity()
     session_id = request.json.get('session_id')
+
+    if not session_id:
+        return jsonify({'message': 'Session ID is required'}), 400
+
     session_record = Session.query.get(session_id)
-    
+
     if session_record and session_record.user_id == current_user['id']:
         session_record.active = False
         session_record.logout_time = datetime.utcnow()
@@ -184,6 +225,12 @@ def upload_pdf():
     pdf = PDF(filename=filename, namespace=f"{current_user_email}_{filename}", user_id=user.id)
     db.session.add(pdf)
     db.session.commit()
+
+    pdf_folder = app.config['UPLOAD_FOLDER']
+    for file_name in os.listdir(pdf_folder):
+        file_path = os.path.join(pdf_folder, file_name)
+        if os.path.isfile(file_path):
+            os.remove(file_path)
 
     return jsonify({'message': 'Upload successful'}), 200
 

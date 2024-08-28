@@ -10,7 +10,7 @@ const App = () => {
     const [isSignup, setIsSignup] = useState(false);
     const [uploaded, setUploaded] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
-    const [selectedFile, setSelectedFile] = useState(null); // New state for selected PDF
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleLoginSuccess = (admin) => {
         setIsAuthenticated(true);
@@ -18,8 +18,7 @@ const App = () => {
     };
 
     const handleUploadSuccess = () => {
-        console.log('Upload successful, transitioning to QueryPage');
-        setUploaded(true); // Ensure this state is updated
+        setUploaded(true);
     };
 
     const handleSignup = () => {
@@ -27,19 +26,19 @@ const App = () => {
     };
 
     const handleSignupSuccess = () => {
-        setIsSignup(false);
+        setIsSignup(false); // Switch back to login page
     };
 
     const handleLogout = () => {
         setIsAuthenticated(false);
         setIsAdmin(false);
         setUploaded(false);
-        setSelectedFile(null); // Reset selected file on logout
+        setSelectedFile(null);
     };
 
     const handleSelectPdf = (filename) => {
         setSelectedFile(filename);
-        setUploaded(true); // Transition to QueryPage
+        setUploaded(true);
     };
 
     if (!isAuthenticated) {
@@ -57,11 +56,11 @@ const App = () => {
     return (
         <div>
             {uploaded ? (
-                <QueryPage fileName={selectedFile} /> // Pass the selected filename
+                <QueryPage fileName={selectedFile} />
             ) : (
                 <UploadPage
                     onUploadSuccess={handleUploadSuccess}
-                    onSelectPdf={handleSelectPdf} // Pass function to UploadPage
+                    onSelectPdf={handleSelectPdf}
                 />
             )}
         </div>
