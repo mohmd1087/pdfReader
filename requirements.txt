@@ -1,0 +1,15 @@
+llama-index
+pinecone-client
+transformers
+llama-index-embeddings-huggingface
+torch
+sentence-transformers
+llama-index-vector-stores-pinecone
+llama-index-llms-huggingface
+llama-index-embeddings-instructor
+flask
+flask_cors
+python-dotenv
+flask-bcrypt 
+flask-jwt-extended 
+flask-sqlalchemy

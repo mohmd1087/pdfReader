@@ -1,0 +1,45 @@
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spinner-border {
+  border-top-color: #007bff;
+  animation: spin 1s linear infinite;
+}
+
+.container {
+  margin-top: 20px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* Centering text and adding spacing */
+.text-center {
+  text-align: center;
+}
+
+.mt-5 {
+  margin-top: 3rem;
+}
+
+.mb-4 {
+  margin-bottom: 2rem;
+}
+
+.lead {
+  font-size: 1.25rem;
+  font-weight: 300;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.btn-primary {
+  width: 100%;
+}
+
