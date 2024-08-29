@@ -157,21 +157,22 @@ def get_active_users():
 @app.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
-    current_user = get_jwt_identity()
-    session_id = request.json.get('session_id')
+    current_user_email = get_jwt_identity()
+    user = User.query.filter_by(email=current_user_email).first()
 
-    if not session_id:
-        return jsonify({'message': 'Session ID is required'}), 400
+    if not user:
+        return jsonify({'message': 'User not found'}), 404
 
-    session_record = Session.query.get(session_id)
+    # Invalidate all active sessions for the user
+    sessions = Session.query.filter_by(user_id=user.id, active=True).all()
+    for session in sessions:
+        session.active = False
+        session.logout_time = datetime.utcnow()
 
-    if session_record and session_record.user_id == current_user['id']:
-        session_record.active = False
-        session_record.logout_time = datetime.utcnow()
-        db.session.commit()
-        return jsonify({'message': 'Logged out successfully'}), 200
-    else:
-        return jsonify({'message': 'Invalid session'}), 400
+    db.session.commit()
+
+    return jsonify({'message': 'Logged out successfully'}), 200
+
     
 
 
@@ -233,6 +234,43 @@ def upload_pdf():
             os.remove(file_path)
 
     return jsonify({'message': 'Upload successful'}), 200
+
+
+
+@app.route('/delete_pdf', methods=['DELETE'])
+@jwt_required()
+def delete_pdf():
+    # Get the filename and user identity from the request
+    filename = request.json.get('filename')
+    current_user_email = get_jwt_identity()
+    
+    # Retrieve the PDF from the database using filename
+    pdf = PDF.query.filter_by(filename=filename, user_id=User.query.filter_by(email=current_user_email).first().id).first()
+    if not pdf:
+        return jsonify({'error': 'PDF not found'}), 404
+
+    # Delete the PDF from the Pinecone index
+    namespace = pdf.namespace
+    pc = Pinecone(api_key=os.getenv('PINECONE_API_KEY'))
+
+    index_name = 'pdf-qa'
+    
+    index = pc.Index(index_name)
+    index.delete(delete_all=True, namespace=namespace)
+    
+    # Delete the PDF from the database
+    db.session.delete(pdf)
+    db.session.commit()
+
+    # Optionally, remove the PDF file from the server (if stored locally)
+    file_path = os.path.join(app.config['UPLOAD_FOLDER'], pdf.filename)
+    if os.path.exists(file_path):
+        os.remove(file_path)
+
+    return jsonify({'message': 'PDF deleted successfully'}), 200
+
+
+
 
 
 @app.route('/get_user_pdfs', methods=['GET'])

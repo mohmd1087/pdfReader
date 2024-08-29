@@ -35,24 +35,28 @@ const AdminDashboard = ({ onLogout }) => {
 
     const handleLogout = async () => {
         try {
-            const sessionId = localStorage.getItem('sessionId');
-            const response = await axios.post('http://localhost:5000/logout', { session_id: sessionId }, {
+            // Call the logout endpoint
+            const response = await axios.post('http://localhost:5000/logout', {
+                session_id: localStorage.getItem('session_id') // Ensure session_id is available in localStorage
+            }, {
                 headers: {
-                    Authorization: `Bearer ${localStorage.getItem('jwtToken')}`
+                    'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                 }
             });
-    
+
             if (response.status === 200) {
+                // Clear the local storage and redirect to login page
                 localStorage.removeItem('jwtToken');
-                localStorage.removeItem('sessionId');
-                onLogout();
+                localStorage.removeItem('session_id');
+                window.location.href = '/login'; // Redirect to the login page
+            } else {
+                console.error('Logout failed. Please try again.');
             }
         } catch (error) {
-            console.error('Logout failed:', error);
-            alert('Logout failed. Please try again.');
+            console.error('Error during logout:', error);
+            // setError('Error during logout: ' + error.message);
         }
     };
-
     return (
         <div>
             <h1>Admin Dashboard</h1>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import './QueryPage.css'; // Import CSS file
 
-const QueryPage = ({ fileName }) => {
+const QueryPage = ({ fileName, onUploadAnother }) => {
     const [query, setQuery] = useState('');
     const [response, setResponse] = useState('');
     const [error, setError] = useState('');
@@ -54,6 +54,9 @@ const QueryPage = ({ fileName }) => {
                     {response && <div className="response-text">Response: {response}</div>}
                     {error && <div className="error-text">{error}</div>}
                 </div>
+                <button className="upload-another-button" onClick={onUploadAnother}>
+                    Upload Another PDF
+                </button>
             </div>
         </div>
     );

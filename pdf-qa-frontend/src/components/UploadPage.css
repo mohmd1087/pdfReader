@@ -27,9 +27,11 @@ body, html {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 10px;
     padding: 40px;
-    width: 500px;
-    text-align: center;
+    width: 80%; /* Adjusted to fill more of the screen width */
+    max-width: 1200px; /* Prevents content from becoming too wide */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 0 auto; /* Centers the content */
+    box-sizing: border-box; /* Ensures padding is included in width calculation */
 }
 
 /* Titles and Text */
@@ -114,19 +116,53 @@ body, html {
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    overflow: hidden; /* Ensures no overflow issues */
 }
 
-.select-button {
+.pdf-filename {
+    flex: 1;
+    margin-right: 10px;
+    word-break: break-word; /* Allows long text to wrap */
+    overflow: hidden;
+    text-overflow: ellipsis; /* Adds ellipsis for overflow text */
+}
+
+.button-group {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0; /* Prevents buttons from shrinking */
+}
+
+.select-button, .delete-button {
     padding: 5px 10px;
-    background-color: #28a745;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    flex: 1; /* Allows buttons to take equal space */
 }
 
-/* Error message */
-.error-message {
-    color: red;
-    margin-top: 20px;
+.select-button {
+    background-color: #28a745;
+}
+
+.delete-button {
+    background-color: #dc3545;
+}
+
+.logout-button {
+    background-color: #9e3030; /* Red color for logout button */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-size: 1em; /* Adjusted font size */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Space above the button */
+}
+
+.logout-button:hover {
+    background-color: #e60000; /* Darker red on hover */
 }

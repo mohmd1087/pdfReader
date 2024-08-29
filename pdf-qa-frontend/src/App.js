@@ -41,6 +41,11 @@ const App = () => {
         setUploaded(true);
     };
 
+    const handleUploadAnother = () => {
+        setUploaded(false); // Reset uploaded state to go back to UploadPage
+        setSelectedFile(null); // Optionally clear selected file
+    };
+
     if (!isAuthenticated) {
         return isSignup ? (
             <SignupPage onSignupSuccess={handleSignupSuccess} />
@@ -56,7 +61,10 @@ const App = () => {
     return (
         <div>
             {uploaded ? (
-                <QueryPage fileName={selectedFile} />
+                <QueryPage
+                    fileName={selectedFile}
+                    onUploadAnother={handleUploadAnother} // Pass handler to QueryPage
+                />
             ) : (
                 <UploadPage
                     onUploadSuccess={handleUploadSuccess}
