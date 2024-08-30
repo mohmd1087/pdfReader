@@ -11,10 +11,12 @@ const App = () => {
     const [uploaded, setUploaded] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null);
+    const [userId, setUserId] = useState(null); // State for userId
 
-    const handleLoginSuccess = (admin) => {
+    const handleLoginSuccess = (admin, id) => {
         setIsAuthenticated(true);
         setIsAdmin(admin);
+        setUserId(id); // Set the userId when the user logs in
     };
 
     const handleUploadSuccess = () => {
@@ -34,6 +36,7 @@ const App = () => {
         setIsAdmin(false);
         setUploaded(false);
         setSelectedFile(null);
+        setUserId(null); // Clear the userId on logout
     };
 
     const handleSelectPdf = (filename) => {
@@ -63,6 +66,7 @@ const App = () => {
             {uploaded ? (
                 <QueryPage
                     fileName={selectedFile}
+                    userId={userId} // Pass userId to QueryPage
                     onUploadAnother={handleUploadAnother} // Pass handler to QueryPage
                 />
             ) : (

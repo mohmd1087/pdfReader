@@ -67,6 +67,15 @@ class PDF(db.Model):
     namespace = db.Column(db.String(120), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
+class ChatHistory(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    pdf_id = db.Column(db.Integer, db.ForeignKey('pdf.id'), nullable=False)
+    question = db.Column(db.Text, nullable=False)
+    answer = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+
 # Register new users
 @app.route('/register', methods=['POST'])
 def register():
@@ -95,30 +104,6 @@ def login():
     return jsonify({'message': 'Invalid credentials'}), 401
 
 
-@app.route('/admin/sessions', methods=['GET'])
-@jwt_required()
-def get_active_sessions():
-    current_user = get_jwt_identity()
-    user = User.query.filter_by(email=current_user).first()
-    
-    if not user or not user.is_admin:
-        return jsonify({'message': 'Admin access required'}), 403
-
-    active_sessions = Session.query.filter_by(active=True).all()
-    active_users = [User.query.get(s.user_id) for s in active_sessions]
-
-    session_data = [
-        {
-            'user_id': u.id,
-            'login_time': s.login_time,
-            'username': u.email
-        }
-        for u, s in zip(active_users, active_sessions)
-    ]
-    # print(f"Active Users: {session_data}")  # Debugging line
-    return jsonify(session_data), 200
-
-
 
 
 # Get the total number of accounts
@@ -132,6 +117,54 @@ def get_total_accounts():
     
     total_accounts = User.query.count()
     return jsonify({'total_accounts': total_accounts}), 200
+
+
+@app.route('/admin/users', methods=['GET'])
+@jwt_required()
+def get_all_users():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+
+    if not user or not user.is_admin:
+        return jsonify({'message': 'Admin access required'}), 403
+
+    users = User.query.all()
+    user_list = [{'id': u.id, 'first_name': u.first_name, 'last_name': u.last_name, 'email': u.email} for u in users]
+    
+    return jsonify({'users': user_list}), 200
+
+
+@app.route('/admin/pdfs', methods=['GET'])
+@jwt_required()
+def get_all_pdfs():
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+
+    if not user or not user.is_admin:
+        return jsonify({'message': 'Admin access required'}), 403
+
+    pdfs = PDF.query.all()
+    pdf_list = [{'id': pdf.id, 'filename': pdf.filename, 'namespace': pdf.namespace, 'user_id': pdf.user_id} for pdf in pdfs]
+    
+    return jsonify({'pdfs': pdf_list}), 200
+
+
+@app.route('/admin/pdf_chats/<int:pdf_id>', methods=['GET'])
+@jwt_required()
+def get_pdf_chats(pdf_id):
+    current_user = get_jwt_identity()
+    user = User.query.filter_by(email=current_user).first()
+
+    if not user or not user.is_admin:
+        return jsonify({'message': 'Admin access required'}), 403
+
+    # Fetch chats for the specified PDF
+    chats = ChatHistory.query.filter_by(pdf_id=pdf_id).all()
+    chat_list = [{'id': chat.id, 'question': chat.question, 'answer': chat.answer} for chat in chats]
+    
+    return jsonify({'chats': chat_list}), 200
+
+
 
 # Get only the active (logged-in) users
 @app.route('/admin/active_users', methods=['GET'])
@@ -321,7 +354,40 @@ def query_pdf():
     vector_store = PineconeVectorStore(pinecone_index=index, namespace= namespace)
     query_engine = VectorStoreIndex.from_vector_store(vector_store).as_query_engine()
     response = query_engine.query(query)
+
+    # Store the question and answer in ChatHistory
+    user = User.query.filter_by(email=current_user_email).first()
+    pdf = PDF.query.filter_by(filename=file_name, user_id=user.id).first()
+    
+    chat_message = ChatHistory(
+        user_id=user.id,
+        pdf_id=pdf.id,
+        question=query,
+        answer=str(response)
+    )
+    db.session.add(chat_message)
+    db.session.commit()
     return jsonify({'response': str(response)}), 200
+
+
+@app.route('/get_chat_history', methods=['GET'])
+@jwt_required()
+def get_chat_history():
+    file_name = request.args.get('file_name')
+    current_user_email = get_jwt_identity()
+
+    user = User.query.filter_by(email=current_user_email).first()
+    pdf = PDF.query.filter_by(filename=file_name, user_id=user.id).first()
+
+    if not pdf:
+        return jsonify({'error': 'PDF not found'}), 404
+
+    chat_messages = ChatHistory.query.filter_by(user_id=user.id, pdf_id=pdf.id).order_by(ChatHistory.timestamp).all()
+    
+    chat_history = [{'question': msg.question, 'answer': msg.answer, 'timestamp': msg.timestamp} for msg in chat_messages]
+    
+    return jsonify({'chat_history': chat_history}), 200
+
 
 
 
