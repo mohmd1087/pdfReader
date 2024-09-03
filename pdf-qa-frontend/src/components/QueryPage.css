@@ -1,0 +1,114 @@
+.query-page-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.chat-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background: #f9f9f9;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.chat-bubble {
+    padding: 10px;
+    border-radius: 15px;
+    max-width: 60%;
+    word-wrap: break-word;
+    display: inline-block;
+    position: relative;
+}
+
+.user-bubble {
+    background: #00c110c0;
+    color: white;
+    align-self: flex-end;
+    border-radius: 15px 15px 0 15px;
+    text-align: right;
+}
+
+.system-bubble {
+    background: #e9ecef;
+    color: #333;
+    align-self: flex-start;
+    border-radius: 15px 15px 15px 0;
+    text-align: left;
+}
+
+.processing-bubble {
+    background: #f0f0f0;
+    color: #666;
+    text-align: center;
+}
+
+.loading-indicator {
+    padding: 10px;
+    text-align: center;
+    font-style: italic;
+    color: #007bff;
+}
+
+.error-text {
+    padding: 10px;
+    color: red;
+    font-weight: bold;
+}
+
+.input-section {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.query-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.submit-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #007bff;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.submit-button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.submit-button:hover:enabled {
+    background: #0056b3;
+}
+
+.upload-another-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background: #28a745;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s;
+}
+
+.upload-another-button:hover {
+    background: #218838;
+}

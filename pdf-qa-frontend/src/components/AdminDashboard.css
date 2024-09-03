@@ -1,0 +1,141 @@
+/* General body styles */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+/* Container for the admin dashboard */
+.admin-dashboard {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    padding: 20px; /* Adjust as needed */
+    overflow: auto;
+}
+
+/* Header styles */
+.admin-dashboard h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Section styles */
+.section {
+    margin-bottom: 20px; /* Space between sections */
+    padding: 10px;
+    border: 1px solid #ddd; /* Optional: Border for better visualization */
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Optional: Background color for better visibility */
+}
+
+/* Title for sections */
+.section h2 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+/* List styles */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+/* List item styles */
+li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    cursor: pointer;
+    overflow: hidden; /* Ensure content doesn’t overflow */
+}
+
+/* Highlighting on hover for list items */
+li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Error message styles */
+.error-message {
+    color: red;
+    margin-top: 20px;
+}
+
+/* Ensure content fits well within the container */
+.section ul {
+    margin: 0;
+}
+
+/* Styles for chat history items */
+li.chat-item {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    overflow: hidden; /* Ensure content doesn’t overflow */
+}
+
+/* Bold text for questions and answers */
+li.chat-item p strong {
+    color: #333;
+}
+
+/* Ensure proper spacing for timestamps */
+li.chat-item p {
+    margin: 5px 0;
+}
+
+/* Ensure scrollbars are visible when needed */
+.admin-dashboard {
+    overflow-y: auto; /* Enable vertical scrolling */
+    flex: 1; /* Ensure the container grows to fill available space */
+}
+
+/* Styles for logout button */
+.logout-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    position: fixed; /* Fixed at the bottom */
+    bottom: 20px;
+    right: 20px;
+}
+
+
+.logout-button:hover {
+    background-color: #0056b3;
+}
+
+.dashboard-content {
+    flex: 1; /* Take up remaining space */
+    overflow-y: auto; /* Allow vertical scrolling */
+}
+
+.error-message {
+    color: red;
+    margin-top: 20px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .admin-dashboard {
+        padding: 10px;
+    }
+    
+    .section {
+        padding: 10px;
+    }
+    
+    .section h2 {
+        font-size: 1.25rem;
+    }
+    
+    .logout-button {
+        padding: 8px 16px;
+        font-size: 0.875rem;
+    }
+}
