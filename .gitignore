@@ -6,7 +6,6 @@ __pycache__/
 aio.py
 code.txt
 init_admin.py
-.env
 package
 update.py
 p
@@ -127,7 +126,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
