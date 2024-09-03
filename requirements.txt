@@ -1,8 +1,6 @@
 llama-index
 pinecone-client
-transformers
 llama-index-embeddings-huggingface
-torch
 sentence-transformers
 llama-index-vector-stores-pinecone
 llama-index-llms-huggingface
