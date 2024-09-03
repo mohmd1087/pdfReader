@@ -1,10 +1,8 @@
 llama-index
 pinecone-client
 llama-index-embeddings-huggingface
-sentence-transformers
 llama-index-vector-stores-pinecone
 llama-index-llms-huggingface
-llama-index-embeddings-instructor
 flask
 flask_cors
 python-dotenv
