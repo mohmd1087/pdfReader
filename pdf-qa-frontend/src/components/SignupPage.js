@@ -18,7 +18,7 @@ const SignupPage = ({ onSignupSuccess }) => {
         }
 
         try {
-            await axios.post('http://localhost:5000/register', {
+            await axios.post('http://13.48.104.243/register', {
                 first_name: firstName,
                 last_name: lastName,
                 email,
