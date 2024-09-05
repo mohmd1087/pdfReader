@@ -17,14 +17,14 @@ const AdminDashboard = () => {
 
     useEffect(() => {
         // Fetch active sessions
-        axios.get('http://localhost:5000/admin/active_users', {
+        axios.get('http://13.48.104.243/admin/active_users', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` }
         })
         .then(response => setActiveSessions(response.data.active_users))
         .catch(error => setError(error.message));
         
         // Fetch all users
-        axios.get('http://localhost:5000/admin/users', {
+        axios.get('http://13.48.104.243/admin/users', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` }
         })
         .then(response => setAllUsers(response.data.users))
@@ -35,7 +35,7 @@ const AdminDashboard = () => {
         setSelectedUser(userId);
 
         // Fetch PDFs for the selected user
-        axios.get('http://localhost:5000/admin/pdfs', {
+        axios.get('http://13.48.104.243/admin/pdfs', {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` }
         })
         .then(response => setUserPdfs(response.data.pdfs.filter(pdf => pdf.user_id === userId)))
@@ -46,7 +46,7 @@ const AdminDashboard = () => {
         setSelectedPdf(pdfId);
 
         // Fetch chat history for the selected PDF
-        axios.get(`http://localhost:5000/admin/pdf_chats/${pdfId}`, {
+        axios.get(`http://13.48.104.243/admin/pdf_chats/${pdfId}`, {
             headers: { 'Authorization': `Bearer ${localStorage.getItem('jwtToken')}` }
         })
         .then(response => setPdfChats(response.data.chats))
