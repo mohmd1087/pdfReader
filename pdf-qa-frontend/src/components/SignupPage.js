@@ -31,6 +31,7 @@ const SignupPage = ({ onSignupSuccess }) => {
         }
     };
 
+    
     return (
         <div className="signup-container">
             <div className="signup-box">
