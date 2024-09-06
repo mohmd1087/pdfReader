@@ -30,7 +30,7 @@ const QueryPage = ({ fileName, onUploadAnother }) => {
 
         try {
             const res = await axios.post(
-                'http://main/query_pdf',
+                '/main/query_pdf',
                 { query, file_name: fileName },
                 {
                     headers: {
@@ -59,7 +59,7 @@ const QueryPage = ({ fileName, onUploadAnother }) => {
         const fetchChatHistory = async () => {
             try {
                 const res = await axios.get(
-                    `http://main/get_chat_history`,
+                    `/main/get_chat_history`,
                     {
                         params: { file_name: fileName },
                         headers: {
