@@ -11,7 +11,7 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
     useEffect(() => {
         const fetchPdfs = async () => {
             try {
-                const response = await axios.get('http://main/get_user_pdfs', {
+                const response = await axios.get('/main/get_user_pdfs', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                     }
@@ -36,7 +36,7 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
 
         setLoading(true);
         try {
-            const response = await axios.post('http://main/upload_pdf', formData, {
+            const response = await axios.post('/main/upload_pdf', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
                     'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
@@ -46,7 +46,7 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
             if (response.status === 200) {
                 onUploadSuccess();
                 // Refresh the list of PDFs
-                const newPdfs = await axios.get('http://main/get_user_pdfs', {
+                const newPdfs = await axios.get('/main/get_user_pdfs', {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
                     }
@@ -68,7 +68,7 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
 
     const handleDeletePdf = async (filename) => {
         try {
-            const response = await axios.delete('http://main/delete_pdf', {
+            const response = await axios.delete('/main/delete_pdf', {
                 data: { filename },
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('jwtToken')}`
@@ -89,7 +89,7 @@ const UploadPage = ({ onUploadSuccess, onSelectPdf }) => {
     const handleLogout = async () => {
         try {
             // Call the logout endpoint
-            const response = await axios.post('http://main/logout', {
+            const response = await axios.post('/main/logout', {
                 session_id: localStorage.getItem('session_id') // Ensure session_id is available in localStorage
             }, {
                 headers: {
