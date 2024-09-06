@@ -12,7 +12,7 @@ const LoginPage = ({ onLoginSuccess, onSignup }) => {
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post('http://16.171.136.239/login', { email, password });
+            const response = await axios.post('http://16.171.32.191/login', { email, password });
             localStorage.setItem('jwtToken', response.data.access_token);
             localStorage.setItem('sessionId', response.data.session_id); // Store session ID
             onLoginSuccess(response.data.isAdmin);
