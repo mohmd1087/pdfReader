@@ -18,7 +18,7 @@ const SignupPage = ({ onSignupSuccess }) => {
         }
 
         try {
-            await axios.post('/main/register', {
+            await axios.post('/register', {
                 first_name: firstName,
                 last_name: lastName,
                 email,
